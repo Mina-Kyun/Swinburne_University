@@ -1,5 +1,17 @@
-[README.md](https://github.com/user-attachments/files/25926170/README.md)
 **# Custom Digital Stopwatch (Logisim)**
+
+
+
+## Course Information
+
+
+
+
+\- Course: Digital Logic Design  
+
+\- Institution: Swinburne University
+
+\- Type: Coursework Assignment
 
 
 
@@ -39,7 +51,7 @@ The system is designed using a modular digital architecture consisting of five s
 
 
 
-**## Demonstration Video**
+**## Demon Video**
 
 
 
