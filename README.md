@@ -1,8 +1,8 @@
 # Swinburne_University
-A collection of coursework and academic projects completed during my studies at Swinburne University.
+A collection of coursework and academic projects completed during my Bachelor of Computer Science studies at Swinburne University.
 
-## Structure
+## Repository Structure
 
-Year1  
-Year2  
-Year3
+- Year1 – Foundations of Computer Science
+- Year2 – Intermediate Software Engineering
+- Year3 – Advanced and Capstone Projects
