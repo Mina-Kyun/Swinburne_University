@@ -1,4 +1,4 @@
-# Swinburne_University
+# Swinburne_University 
 A collection of coursework and academic projects completed during my Bachelor of Computer Science studies at Swinburne University.
 
 ## Repository Structure
