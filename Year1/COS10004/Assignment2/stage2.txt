@@ -1,0 +1,73 @@
+// ==== STAGE 1: GAME SETUP ====
+// ---- Ask Name ----
+Name:
+      MOV R1, #name_buffer ; R1 = addr (store name)
+      MOV R3, #msg_ask_name ; R3 = string addr
+      STR R3, .WriteString ; print string
+      STR R1, .ReadString ; input string → buffer
+// ---- Ask Matchsticks (10–100) ----
+Loop_Input:
+      MOV R3, #msg_player ; load "Player"
+      STR R3, .WriteString ; print
+      STR R1, .WriteString ; print name
+      MOV R3, #msg_ask_number ; load question
+      STR R3, .WriteString ; print
+      LDR R0, .InputNum ; read number → R0
+      CMP R0, #10       ; compare R0 vs 10
+      BLT Loop_Input    ; if < → retry
+      CMP R0, #100      ; compare vs 100
+      BGT Loop_Input    ; if > → retry
+//==== STAGE 2: SINGLE PLAYER INPUT ====
+// ---- GAME LOOP ----
+Game_Loop:
+      MOV R3, #msg_player
+      STR R3, .WriteString
+      STR R1, .WriteString
+      MOV R3, #msg_remaining_1
+      STR R3, .WriteString
+      STR R0, .WriteUnsignedNum ; print number
+      MOV R3, #msg_remaining_2
+      STR R3, .WriteString
+// ---- PLAYER TURN ----
+Player_Turn:
+      MOV R3, #msg_player
+      STR R3, .WriteString
+      STR R1, .WriteString
+      MOV R3, #msg_ask_remove
+      STR R3, .WriteString ; ask input
+      LDR R4, .InputNum ; read input → R4
+      CMP R4, #1
+      BLT Player_Turn   ; <1 → retry
+      CMP R4, #7
+      BGT Player_Turn   ; >7 → retry
+      CMP R4, R0
+      BGT Player_Turn   ; >remaining → retry
+// ---- Update Remaining ---- 
+      SUB R0, R0, R4    ; R0 = R0 - R4
+      MOV R3, #msg_remaining
+      STR R3, .WriteString
+      STR R0, .WriteUnsignedNum ; in new number
+      CMP R0, #0
+      BGT Player_Turn   ; >0 remaining → continue playing
+// ---- GAME OVER ----
+Game_Over:
+      MOV R3, #msg_game_over
+      STR R3, .WriteString ; print end
+End:
+      HALT              ; stop program
+//
+//
+// ==== DATA ====
+//---- Stage 1 ----
+msg_ask_name: .ASCIZ "\nEnter your name:"
+msg_ask_number: .ASCIZ ", Enter number of matchsticks (10-100):"
+msg_player: .ASCIZ "\nPlayer: "
+msg_matchsticks: .ASCIZ ", Matchsticks:"
+// ---- Stage 2 ----
+msg_remaining_1: .asciz ", There are"
+msg_remaining_2: .asciz "matchsticks remaining."
+msg_ask_remove: .asciz ", How many do you want to remove (1-7)?"
+msg_remaining: .asciz "\nRemaining: "
+msg_game_over: .asciz "\nGame Over!"
+// 
+name_buffer: .block 32

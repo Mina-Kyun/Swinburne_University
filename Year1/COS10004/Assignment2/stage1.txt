@@ -1,0 +1,39 @@
+// ==== STAGE 1: GAME SETUP ====
+// ---- Ask Name ----
+Name:
+      MOV R1, #name_buffer ; R1 = addr (store name)
+      MOV R3, #msg_ask_name ; R3 = string addr
+      STR R3, .WriteString ; print string
+      STR R1, .ReadString ; input string → buffer
+// ---- Ask Matchsticks (10–100) ----
+Loop_Input:
+      MOV R3, #msg_player ; load "Player"
+      STR R3, .WriteString ; print
+      STR R1, .WriteString ; print name
+      MOV R3, #msg_ask_number ; load question
+      STR R3, .WriteString ; print
+      LDR R0, .InputNum ; read number → R0
+      CMP R0, #10       ; compare R0 vs 10
+      BLT Loop_Input    ; if < → retry
+      CMP R0, #100      ; compare vs 100
+      BGT Loop_Input    ; if > → retry
+// ---- Print Player Name ----
+      MOV R3, #msg_player
+      STR R3, .WriteString
+      STR R1, .WriteString ;print name
+// ---- Print Number of Matchsticks ----
+      MOV R3, #msg_matchsticks
+      STR R3, .WriteString
+      STR R0, .WriteUnsignedNum ;print number 
+//
+      HALT              ; stop program
+//
+//
+// ==== DATA ====
+//---- Stage 1 ----
+msg_ask_name: .ASCIZ "\nEnter your name:"
+msg_ask_number: .ASCIZ ", Enter number of matchsticks (10-100):"
+msg_player: .ASCIZ "\nPlayer 1 is:"
+msg_matchsticks: .ASCIZ ", Matchsticks:"
+// 
+name_buffer: .block 32

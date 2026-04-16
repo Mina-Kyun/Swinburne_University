@@ -1,0 +1,142 @@
+// ==== STAGE 1: GAME SETUP ====
+// ---- Ask Name ----
+Name:
+      MOV R1, #name_buffer ; R1 = addr (store name)
+      MOV R3, #msg_ask_name ; R3 = string addr
+      STR R3, .WriteString ; print string
+      STR R1, .ReadString ; input string → buffer
+// ---- Ask Matchsticks (10–100) ----
+Loop_Input:
+      MOV R3, #msg_player ; load "Player"
+      STR R3, .WriteString ; print
+      STR R1, .WriteString ; print name
+      MOV R3, #msg_ask_number ; load question
+      STR R3, .WriteString ; print
+      LDR R0, .InputNum ; read number → R0
+      CMP R0, #10       ; compare R0 vs 10
+      BLT Loop_Input    ; if < → retry
+      CMP R0, #100      ; compare vs 100
+      BGT Loop_Input    ; if > → retry
+//==== STAGE 2: SINGLE PLAYER INPUT ====
+// ---- GAME LOOP ----
+Game_Loop:
+      MOV R3, #msg_player
+      STR R3, .WriteString
+      STR R1, .WriteString
+      MOV R3, #msg_remaining_1
+      STR R3, .WriteString
+      STR R0, .WriteUnsignedNum ; print number
+      MOV R3, #msg_remaining_2
+      STR R3, .WriteString
+// ---- PLAYER TURN ----
+Player_Turn:
+      MOV R3, #msg_player
+      STR R3, .WriteString
+      STR R1, .WriteString
+      MOV R3, #msg_ask_remove
+      STR R3, .WriteString ; ask input
+      LDR R4, .InputNum ; read input → R4
+      CMP R4, #1
+      BLT Player_Turn   ; <1 → retry
+      CMP R4, #7
+      BGT Player_Turn   ; >7 → retry
+      CMP R4, R0
+      BGT Player_Turn   ; >remaining → retry
+      SUB R0, R0, R4    ; R0 = R0 - R4
+      CMP R0, #0
+      BEQ Draw          ; ==0 → draw
+      CMP R0, #1
+      BEQ Player_Win    ; ==1 → win
+// ==== STAGE 3: IMPLEMENT HUMAN VERSUS COMPUTER ====
+// ---- COMPUTER TURN ----
+Computer_Turn:
+      MOV R3, #msg_computer_turn
+      STR R3, .WriteString ; print message
+Computer_Loop:
+      LDR R5, .Random   ; random value
+      LSR R5, R5, #29   ; shrink range (0–7)
+      CMP R5, #0
+      BEQ Computer_Loop ; avoid 0
+      CMP R5, R0
+      BGT Computer_Loop ; avoid invalid
+      SUB R0, R0, R5    ; update total
+      CMP R0, #0
+      BEQ Draw
+      CMP R0, #1
+      BEQ Player_Lose
+      MOV R3, #msg_remaining
+      STR R3, .WriteString
+      STR R0, .WriteUnsignedNum
+      B Player_Turn     ; next turn
+// ---- RESULT ----
+Player_Win:
+      STR R1, .WriteString ; print name
+      MOV R3, #you_win
+      STR R3, .WriteString
+      B Game_Over
+Player_Lose:
+      STR R1, .WriteString
+      MOV R3, #you_lose
+      STR R3, .WriteString
+      B Game_Over
+Draw:
+      MOV R3, #msg_draw
+      STR R3, .WriteString
+      B Game_Over
+// ---- GAME OVER ----
+Game_Over:
+      MOV R3, #msg_game_over
+      STR R3, .WriteString ; print end
+// ---- REPLAY ----
+Replay:
+      MOV R3, #msg_ask_for_replay
+      STR R3, .WriteString ; ask replay
+      MOV R0, #choice
+      STR R0, .ReadString ; read input
+      LDRB R0, [R0]     ; load 1 char
+      CMP R0, #121      ; 'y'
+      BEQ Change_Name
+      CMP R0, #110      ; 'n'
+      BEQ End
+      B Replay          ; invalid → retry
+// ---- CHANGE NAME ----
+Change_Name:
+      STR R1, .WriteString
+      MOV R3, #msg_change_name
+      STR R3, .WriteString
+      MOV R0, #choice
+      STR R0, .ReadString
+      LDRB R0, [R0]
+      CMP R0, #121      ; 'y'
+      BEQ Name          ; change name
+      CMP R0, #110      ; 'n'
+      BEQ Loop_Input    ; restart
+      B Change_Name
+// ===== STAGE 4: GRAPHICS =====
+End:
+      HALT              ; stop program
+//
+//
+// ==== DATA ====
+//---- Stage 1 ----
+msg_ask_name: .ASCIZ "\nEnter your name:"
+msg_ask_number: .ASCIZ ", Enter number of matchsticks (10-100):"
+msg_player: .ASCIZ "\nPlayer: "
+msg_matchsticks: .ASCIZ ", Matchsticks:"
+// ---- Stage 2 ----
+msg_remaining_1: .asciz ", There are"
+msg_remaining_2: .asciz "matchsticks remaining."
+msg_ask_remove: .asciz ", How many do you want to remove (1-7)?"
+msg_remaining: .asciz "\nRemaining: "
+msg_game_over: .asciz "\nGame Over!"
+// ---- Stage 3 ----
+msg_computer_turn: .asciz "\nComputer's turn\n"
+you_win: .asciz ",YOU WIN!"
+you_lose: .asciz ",YOU LOSE!"
+msg_draw: .asciz "\nIt's a DRAW!"
+msg_ask_for_replay: .asciz "\nPlay again (y/n)?\n"
+// 
+msg_change_name: .asciz ",Do you want to change your name (y/n)?"
+//
+name_buffer: .block 32
+choice: .block 4
