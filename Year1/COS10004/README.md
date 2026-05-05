@@ -1,7 +1,26 @@
-# Year 1
+# COS10004 - Computer Systems
 
-This folder contains a collection of work completed during my first year of study.
+This repository contains coursework and lab exercises for COS10004 (Computer Systems).
 
-It includes various assignments, projects, and practice work developed over time.
+## Contents
+- **Lab Exercises**
+  - Logisim digital circuit designs (early labs)
+  - ARM Assembly programming (later labs)
+- **Assignments**
+  - Matchsticks game implemented in ARM assembly
+  - Progressive development from basic input/output to full game logic with graphics
 
-This section is continuously updated as new work is added.
+## Topics Covered
+- Digital logic and circuit design
+- Computer architecture fundamentals
+- ARM assembly programming
+- Control flow and branching
+- Memory and register usage
+- Function-based program structure
+
+## Tools Used
+- Logisim (for circuit design)
+- ARMlite (for ARM assembly programming)
+
+## Purpose
+This repository demonstrates the development of foundational knowledge in computer systems, progressing from hardware-level concepts (digital circuits) to low-level software implementation (assembly programming).
