@@ -14,3 +14,6 @@ An interactive music-based project developed for COS10009.
 
 ## Purpose
 This project combines programming fundamentals with creative interaction through music.
+
+## Demonstration Video
+https://youtu.be/9TViRoKhMVI
